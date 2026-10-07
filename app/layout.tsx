@@ -5,8 +5,9 @@ export const metadata: Metadata = {
   title: "Vou de Barber — Gestão para barbearias",
   description: "Agenda, clientes, equipe e financeiro da sua barbearia em um só lugar.",
   icons: {
-    icon: "/favicon.svg",
-    shortcut: "/favicon.svg",
+    icon: "/brand/icon.png",
+    shortcut: "/brand/icon.png",
+    apple: "/brand/icon.png",
   },
 };
 

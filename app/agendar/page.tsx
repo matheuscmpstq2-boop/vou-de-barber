@@ -7,12 +7,12 @@ import {
   Clock3,
   MapPin,
   MessageCircle,
-  Scissors,
   UserRound,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import type { PublicPlan } from "@/components/customer-plans";
+import { BrandLogo } from "@/components/brand-logo";
 import { supabase } from "@/lib/supabase";
 
 type Service = {
@@ -329,9 +329,7 @@ export default function Agendar() {
       <header className="bg-[#1a1c1e] text-white">
         <div className="mx-auto max-w-5xl px-5 pb-9 pt-6 sm:px-8 sm:pb-12 sm:pt-9">
           <div className="flex items-center gap-3 border-b border-white/10 pb-6">
-            <div className="grid size-11 shrink-0 place-items-center rounded-xl bg-[#d6a53a] text-[#1a1c1e]">
-              <Scissors className="size-5" />
-            </div>
+            <BrandLogo className="h-12 w-[72px] shrink-0" priority />
             <p className="min-w-0 truncate text-base font-bold sm:text-lg">
               {data?.shopName || "Vou de Barber"}
             </p>
@@ -689,7 +687,8 @@ export default function Agendar() {
             </aside>
           </form>
         )}
-        <p className="mt-10 text-center text-sm text-zinc-500">
+        <div className="mt-10 flex justify-center"><BrandLogo className="h-16 w-24" /></div>
+        <p className="mt-3 text-center text-sm text-zinc-500">
           Agendamento por Vou de Barber
         </p>
       </div>

@@ -7,10 +7,10 @@ import {
   Building2,
   KeyRound,
   MailCheck,
-  Scissors,
   ShieldCheck,
   UserRound,
 } from "lucide-react";
+import { BrandLogo } from "@/components/brand-logo";
 import { supabase } from "@/lib/supabase";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -210,9 +210,7 @@ export default function Configurar() {
     <main className="min-h-screen bg-[#f3f4f6] p-4 sm:p-8">
       <div className="mx-auto grid min-h-[calc(100vh-4rem)] max-w-5xl overflow-hidden rounded-3xl bg-white shadow-xl lg:grid-cols-[340px_1fr]">
         <aside className="bg-[#17191d] p-7 text-white sm:p-9">
-          <div className="grid size-12 place-items-center rounded-2xl bg-[#d6a53a] text-[#17191d]">
-            <Scissors />
-          </div>
+          <BrandLogo priority />
           <h1 className="mt-7 text-2xl font-bold">Prepare sua barbearia</h1>
           <p className="mt-2 leading-6 text-zinc-400">
             Complete os dados para criar seu painel e liberar o link de

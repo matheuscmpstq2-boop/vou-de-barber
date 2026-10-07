@@ -1,7 +1,7 @@
 "use client";
 
 import { FormEvent, useEffect, useState } from "react";
-import { Scissors } from "lucide-react";
+import { BrandLogo } from "@/components/brand-logo";
 import { supabase } from "@/lib/supabase";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -83,7 +83,7 @@ export default function RecuperarSenha() {
   return (
     <main className="grid min-h-screen place-items-center bg-[#17191d] p-5">
       <section className="w-full max-w-md rounded-3xl bg-white p-8 shadow-2xl">
-        <div className="grid size-12 place-items-center rounded-2xl bg-[#d6a53a]"><Scissors /></div>
+        <BrandLogo priority />
         <h1 className="mt-5 text-2xl font-bold">{step === "new" ? "Crie uma nova senha" : "Recuperar senha"}</h1>
         {step === "email" && <>
           <p className="mt-2 text-sm text-zinc-600">Informe o e-mail da sua conta para receber um link de recuperação.</p>

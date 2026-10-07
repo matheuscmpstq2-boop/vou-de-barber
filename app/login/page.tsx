@@ -1,7 +1,7 @@
 "use client";
 
 import { FormEvent, useState } from "react";
-import { Scissors } from "lucide-react";
+import { BrandLogo } from "@/components/brand-logo";
 import { supabase } from "@/lib/supabase";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -28,9 +28,7 @@ export default function Login() {
   return (
     <main className="grid min-h-screen place-items-center bg-[#17191d] p-5">
       <section className="w-full max-w-md rounded-3xl bg-white p-8 shadow-2xl">
-        <div className="grid size-12 place-items-center rounded-2xl bg-[#d6a53a]">
-          <Scissors />
-        </div>
+        <BrandLogo priority />
         <h1 className="mt-5 text-2xl font-bold">Entre no Vou de Barber</h1>
         <p className="mt-1 text-sm text-zinc-500">
           Acesse o painel da sua barbearia.

@@ -36,6 +36,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { CustomerPlans } from "@/components/customer-plans";
+import { BrandLogo } from "@/components/brand-logo";
 import { supabase } from "@/lib/supabase";
 
 type Status =
@@ -529,11 +530,9 @@ export default function Home() {
         className={`fixed inset-y-0 left-0 z-40 w-[248px] border-r border-white/10 bg-[#17191d] text-white transition-transform lg:translate-x-0 ${mobileNav ? "translate-x-0" : "-translate-x-full"}`}
       >
         <div className="flex h-[76px] items-center gap-3 border-b border-white/10 px-6">
-          <div className="grid size-10 place-items-center rounded-xl bg-[#d6a53a] text-[#17191d]">
-            <Scissors className="size-5" />
-          </div>
+          <BrandLogo className="h-12 w-[72px] shrink-0" priority />
           <div>
-            <p className="text-lg font-bold tracking-tight">Vou de Barber</p>
+            <p className="text-sm font-bold tracking-tight">Vou de Barber</p>
             <p className="text-xs text-zinc-400">Gestão inteligente</p>
           </div>
           <button
@@ -728,9 +727,7 @@ export default function Home() {
           className="rounded-3xl sm:max-w-[520px]"
         >
           <DialogHeader>
-            <div className="mb-2 grid size-12 place-items-center rounded-2xl bg-[#17191d] text-[#d6a53a]">
-              <Scissors />
-            </div>
+            <BrandLogo className="mb-2 h-24 w-36" />
             <DialogTitle className="text-2xl">
               Configure sua barbearia
             </DialogTitle>
