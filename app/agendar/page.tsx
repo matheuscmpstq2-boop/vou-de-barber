@@ -12,7 +12,6 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import type { PublicPlan } from "@/components/customer-plans";
-import { BrandLogo } from "@/components/brand-logo";
 import { supabase } from "@/lib/supabase";
 
 type Service = {
@@ -162,6 +161,7 @@ export default function Agendar() {
         "",
         `/agendar?barbearia=${encodeURIComponent(slug)}`,
       );
+      document.title = `${loaded.shopName} | Agendamento online`;
       setData(loaded);
       setBarber(loaded.barbers.find((b) => b.active)?.name || "");
     })();
@@ -329,9 +329,8 @@ export default function Agendar() {
       <header className="bg-[#151515] text-white">
         <div className="mx-auto max-w-5xl px-5 pb-9 pt-6 sm:px-8 sm:pb-12 sm:pt-9">
           <div className="flex items-center gap-3 border-b border-white/10 pb-6">
-            <BrandLogo className="h-12 w-[72px] shrink-0" priority />
             <p className="min-w-0 truncate text-base font-bold sm:text-lg">
-              {data?.shopName || "Vou de Barber"}
+              {data?.shopName || "Agendamento online"}
             </p>
             <span className="ml-auto hidden text-sm text-zinc-400 sm:block">
               Agendamento online
@@ -687,9 +686,8 @@ export default function Agendar() {
             </aside>
           </form>
         )}
-        <div className="mt-10 flex justify-center"><BrandLogo className="h-16 w-24" /></div>
-        <p className="mt-3 text-center text-sm text-zinc-500">
-          Agendamento por Vou de Barber
+        <p className="mt-10 text-center text-sm text-zinc-500">
+          {data?.shopName || "Agendamento online"}
         </p>
       </div>
     </main>
