@@ -26,7 +26,7 @@ export default function Login() {
     location.href = "/";
   }
   return (
-    <main className="grid min-h-screen place-items-center bg-[#17191d] p-5">
+    <main className="grid min-h-screen place-items-center bg-[#151515] p-5">
       <section className="w-full max-w-md rounded-3xl bg-white p-8 shadow-2xl">
         <BrandLogo priority />
         <h1 className="mt-5 text-2xl font-bold">Entre no Vou de Barber</h1>
@@ -55,19 +55,19 @@ export default function Login() {
               {error}
             </p>
           )}
-          <Button disabled={loading} className="h-11 w-full bg-[#17191d]">
+          <Button disabled={loading} className="h-11 w-full bg-[#c99f3d] hover:bg-[#b88b2f]">
             {loading ? "Entrando..." : "Entrar"}
           </Button>
         </form>
         <a
           href="/recuperar-senha"
-          className="mt-4 block text-center text-sm font-semibold text-[#8a5d0d] hover:underline"
+          className="mt-4 block text-center text-sm font-semibold text-[#805d19] hover:underline"
         >
           Esqueci minha senha
         </a>
         <button
           onClick={() => (location.href = "/configurar?novo=1")}
-          className="mt-5 w-full rounded-xl border border-amber-200 bg-amber-50 py-3 text-sm font-bold text-[#8a5d0d] hover:bg-amber-100"
+          className="mt-5 w-full rounded-xl border border-amber-200 bg-amber-50 py-3 text-sm font-bold text-[#805d19] hover:bg-amber-100"
         >
           Ainda não tenho conta
         </button>

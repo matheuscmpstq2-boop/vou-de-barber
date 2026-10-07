@@ -207,9 +207,9 @@ export default function Configurar() {
   }
 
   return (
-    <main className="min-h-screen bg-[#f3f4f6] p-4 sm:p-8">
+    <main className="min-h-screen bg-[#f7f4ec] p-4 sm:p-8">
       <div className="mx-auto grid min-h-[calc(100vh-4rem)] max-w-5xl overflow-hidden rounded-3xl bg-white shadow-xl lg:grid-cols-[340px_1fr]">
-        <aside className="bg-[#17191d] p-7 text-white sm:p-9">
+        <aside className="bg-[#151515] p-7 text-white sm:p-9">
           <BrandLogo priority />
           <h1 className="mt-7 text-2xl font-bold">Prepare sua barbearia</h1>
           <p className="mt-2 leading-6 text-zinc-400">
@@ -243,7 +243,7 @@ export default function Configurar() {
             />
           </div>
           <div className="mt-8 flex gap-3 rounded-2xl border border-white/10 bg-white/5 p-4 text-sm text-zinc-400">
-            <ShieldCheck className="mt-0.5 size-5 shrink-0 text-[#d6a53a]" />
+            <ShieldCheck className="mt-0.5 size-5 shrink-0 text-[#c99f3d]" />
             <p>
               Seus documentos ficam protegidos e não aparecem para os clientes.
             </p>
@@ -251,7 +251,7 @@ export default function Configurar() {
         </aside>
         <section className="p-6 sm:p-10 lg:p-12">
           <div className="mb-8">
-            <p className="text-sm font-semibold text-[#9a6a14]">
+            <p className="text-sm font-semibold text-[#805d19]">
               Etapa {step + 1} de 3
             </p>
             <h2 className="mt-1 text-2xl font-bold">
@@ -286,7 +286,7 @@ export default function Configurar() {
                 </div>
                 {resendMessage && <p className="mt-4 text-sm font-medium text-zinc-700">{resendMessage}</p>}
                 <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:justify-center">
-                  <Button onClick={resendConfirmation} disabled={loading} className="h-11 bg-[#17191d]">
+                  <Button onClick={resendConfirmation} disabled={loading} className="h-11 bg-[#c99f3d] hover:bg-[#b88b2f]">
                     {loading ? "Reenviando..." : "Reenviar e-mail"}
                   </Button>
                   <Button variant="outline" onClick={() => location.href="/login"} className="h-11 bg-white">
@@ -341,7 +341,7 @@ export default function Configurar() {
                 <Button
                   onClick={createAccess}
                   disabled={loading}
-                  className="h-12 bg-[#17191d] px-7 font-bold"
+                  className="h-12 bg-[#c99f3d] px-7 font-bold hover:bg-[#b88b2f]"
                 >
                   {loading ? "Criando acesso..." : "Continuar"}
                   {!loading && <ArrowRight className="size-4" />}
@@ -394,14 +394,14 @@ export default function Configurar() {
                   <Input
                     value={email}
                     readOnly
-                    className="mt-2 h-12 bg-zinc-50"
+                    className="mt-2 h-12 bg-secondary"
                   />
                 </Field>
               </div>
               {error && <ErrorText text={error} />}
               <Button
                 onClick={next}
-                className="h-12 w-full bg-[#17191d] font-bold sm:w-auto sm:min-w-52"
+                className="h-12 w-full bg-[#c99f3d] font-bold sm:w-auto sm:min-w-52 hover:bg-[#b88b2f]"
               >
                 Continuar <ArrowRight className="size-4" />
               </Button>
@@ -500,11 +500,11 @@ export default function Configurar() {
                   />
                 </Field>
               </div>
-              <label className="flex items-start gap-3 rounded-xl bg-zinc-50 p-4 text-sm text-zinc-600">
+              <label className="flex items-start gap-3 rounded-xl bg-secondary p-4 text-sm text-zinc-600">
                 <input
                   type="checkbox"
                   required
-                  className="mt-1 size-4 accent-[#17191d]"
+                  className="mt-1 size-4 accent-[#151515]"
                 />
                 <span>
                   Confirmo que os dados informados são verdadeiros e autorizo
@@ -527,7 +527,7 @@ export default function Configurar() {
                 </Button>
                 <Button
                   disabled={!uid || loading}
-                  className="h-12 bg-[#d6a53a] px-7 font-bold text-[#17191d] hover:bg-[#c99a32]"
+                  className="h-12 bg-[#c99f3d] px-7 font-bold text-[#151515] hover:bg-[#b88b2f]"
                 >
                   {loading ? "Criando sua barbearia..." : "Concluir cadastro"}
                 </Button>
@@ -581,7 +581,7 @@ function Step({
       className={`flex items-center gap-3 rounded-2xl p-3 ${active ? "bg-white/10" : ""}`}
     >
       <div
-        className={`grid size-10 place-items-center rounded-xl ${active || done ? "bg-[#d6a53a] text-[#17191d]" : "bg-white/10 text-zinc-500"}`}
+        className={`grid size-10 place-items-center rounded-xl ${active || done ? "bg-[#c99f3d] text-[#151515]" : "bg-white/10 text-zinc-500"}`}
       >
         {done ? "✓" : <Icon className="size-5" />}
       </div>

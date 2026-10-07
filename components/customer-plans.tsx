@@ -231,8 +231,8 @@ export function CustomerPlans({
   const template = editor && editor !== "new" ? editor : null;
   return (
     <div className="space-y-6">
-      <section className="rounded-2xl bg-[#17191d] p-6 text-white">
-        <Ticket className="mb-3 size-7 text-[#d6a53a]" />
+      <section className="rounded-2xl bg-[#151515] p-6 text-white">
+        <Ticket className="mb-3 size-7 text-[#c99f3d]" />
         <h2 className="text-2xl font-bold">Planos de clientes</h2>
         <p className="mt-2 max-w-2xl text-sm text-zinc-300">
           Crie pacotes de cortes, barba ou outros serviços. Ative por CPF e
@@ -363,7 +363,7 @@ export function CustomerPlans({
                       </div>
                       <span className="text-xs font-semibold">{label}</span>
                     </div>
-                    <p className="mt-3 font-semibold text-[#997015]">
+                    <p className="mt-3 font-semibold text-[#805d19]">
                       {m.plan_name}
                     </p>
                     <p className="text-xs text-zinc-500">
@@ -386,7 +386,7 @@ export function CustomerPlans({
                         return (
                           <div
                             key={b.serviceId}
-                            className="rounded-xl bg-zinc-50 p-3 text-sm"
+                            className="rounded-xl bg-secondary p-3 text-sm"
                           >
                             <div className="flex justify-between gap-2">
                               <b>{b.serviceName}</b>

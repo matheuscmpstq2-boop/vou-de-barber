@@ -81,7 +81,7 @@ export default function RecuperarSenha() {
   }
 
   return (
-    <main className="grid min-h-screen place-items-center bg-[#17191d] p-5">
+    <main className="grid min-h-screen place-items-center bg-[#151515] p-5">
       <section className="w-full max-w-md rounded-3xl bg-white p-8 shadow-2xl">
         <BrandLogo priority />
         <h1 className="mt-5 text-2xl font-bold">{step === "new" ? "Crie uma nova senha" : "Recuperar senha"}</h1>
@@ -89,7 +89,7 @@ export default function RecuperarSenha() {
           <p className="mt-2 text-sm text-zinc-600">Informe o e-mail da sua conta para receber um link de recuperação.</p>
           <form onSubmit={sendEmail} className="mt-6 space-y-4">
             <Input aria-label="E-mail" name="email" type="email" autoComplete="email" required placeholder="Seu e-mail" className="h-11" />
-            <Button disabled={loading} className="h-11 w-full bg-[#17191d]">{loading ? "Enviando..." : "Enviar link de recuperação"}</Button>
+            <Button disabled={loading} className="h-11 w-full bg-[#c99f3d] hover:bg-[#b88b2f]">{loading ? "Enviando..." : "Enviar link de recuperação"}</Button>
           </form>
         </>}
         {step === "sent" && <p className="mt-4 text-sm text-zinc-600">Se esse e-mail estiver cadastrado, você receberá um link para redefinir sua senha. Confira também a caixa de spam.</p>}
@@ -97,11 +97,11 @@ export default function RecuperarSenha() {
         {step === "new" && <form onSubmit={updatePassword} className="mt-6 space-y-4">
           <Input aria-label="Nova senha" name="password" type="password" autoComplete="new-password" minLength={8} required placeholder="Nova senha (mínimo de 8 caracteres)" className="h-11" />
           <Input aria-label="Confirmar nova senha" name="confirmation" type="password" autoComplete="new-password" minLength={8} required placeholder="Confirme a nova senha" className="h-11" />
-          <Button disabled={loading} className="h-11 w-full bg-[#17191d]">{loading ? "Salvando..." : "Salvar nova senha"}</Button>
+          <Button disabled={loading} className="h-11 w-full bg-[#c99f3d] hover:bg-[#b88b2f]">{loading ? "Salvando..." : "Salvar nova senha"}</Button>
         </form>}
         {step === "done" && <p className="mt-4 text-sm text-zinc-600">Sua senha foi alterada. Entre com a nova senha para continuar.</p>}
         {error && <p role="alert" className="mt-4 rounded-xl bg-red-50 p-3 text-sm text-red-700">{error}</p>}
-        <a href="/login" className="mt-6 block text-center text-sm font-semibold text-[#8a5d0d] hover:underline">Voltar ao login</a>
+        <a href="/login" className="mt-6 block text-center text-sm font-semibold text-[#805d19] hover:underline">Voltar ao login</a>
       </section>
     </main>
   );

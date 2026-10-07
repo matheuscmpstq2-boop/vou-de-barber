@@ -519,15 +519,15 @@ export default function Home() {
               : null;
 
   return (
-    <div className="min-h-screen bg-[#f3f4f6] text-[#1b1d20]">
+    <div className="min-h-screen bg-[#f7f4ec] text-[#24211b]">
       {notice && (
-        <div className="fixed right-5 top-5 z-[80] flex items-center gap-2 rounded-xl bg-[#17191d] px-4 py-3 text-sm font-semibold text-white shadow-xl">
-          <Check className="size-4 text-[#d6a53a]" />
+        <div className="fixed right-5 top-5 z-[80] flex items-center gap-2 rounded-xl bg-[#151515] px-4 py-3 text-sm font-semibold text-white shadow-xl">
+          <Check className="size-4 text-[#c99f3d]" />
           {notice}
         </div>
       )}
       <aside
-        className={`fixed inset-y-0 left-0 z-40 w-[248px] border-r border-white/10 bg-[#17191d] text-white transition-transform lg:translate-x-0 ${mobileNav ? "translate-x-0" : "-translate-x-full"}`}
+        className={`fixed inset-y-0 left-0 z-40 w-[248px] border-r border-white/10 bg-[#151515] text-white transition-transform lg:translate-x-0 ${mobileNav ? "translate-x-0" : "-translate-x-full"}`}
       >
         <div className="flex h-[76px] items-center gap-3 border-b border-white/10 px-6">
           <BrandLogo className="h-12 w-[72px] shrink-0" priority />
@@ -554,7 +554,7 @@ export default function Home() {
                 setMobileNav(false);
                 setSearch("");
               }}
-              className={`flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left text-sm font-medium transition ${active === label ? "bg-[#d6a53a] text-[#17191d]" : "text-zinc-400 hover:bg-white/5 hover:text-white"}`}
+              className={`flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left text-sm font-medium transition ${active === label ? "bg-[#c99f3d] text-[#151515]" : "text-zinc-400 hover:bg-white/5 hover:text-white"}`}
             >
               <Icon className="size-[18px]" />
               {label}
@@ -568,7 +568,7 @@ export default function Home() {
         </nav>
         <div className="absolute bottom-5 left-4 right-4 rounded-2xl border border-white/10 bg-white/[.04] p-4">
           <div className="flex items-center gap-3">
-            <div className="grid size-10 place-items-center rounded-full bg-[#d6a53a] font-bold text-[#17191d]">
+            <div className="grid size-10 place-items-center rounded-full bg-[#c99f3d] font-bold text-[#151515]">
               VB
             </div>
             <div>
@@ -601,7 +601,7 @@ export default function Home() {
                 <Input
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
-                  className="w-64 bg-zinc-50 pl-9"
+                  className="w-64 bg-secondary pl-9"
                   placeholder="Buscar..."
                 />
               </div>
@@ -609,7 +609,7 @@ export default function Home() {
             {action && (
               <Button
                 onClick={() => setModal(action[1] as typeof modal)}
-                className="h-10 rounded-xl bg-[#d6a53a] font-semibold text-[#17191d] hover:bg-[#c99a32]"
+                className="h-10 rounded-xl bg-[#c99f3d] font-semibold text-[#151515] hover:bg-[#b88b2f]"
               >
                 <Plus />
                 {action[0]}
@@ -698,9 +698,9 @@ export default function Home() {
             />
           )}
           {isLocked && active !== "Configurações" && (
-            <div className="fixed inset-0 z-20 grid place-items-center bg-[#f3f4f6]/95 px-5 pt-[76px] lg:left-[248px]">
+            <div className="fixed inset-0 z-20 grid place-items-center bg-[#f7f4ec]/95 px-5 pt-[76px] lg:left-[248px]">
               <section className="w-full max-w-lg rounded-3xl border bg-white p-8 text-center shadow-xl">
-                <div className="mx-auto grid size-14 place-items-center rounded-2xl bg-amber-100 text-[#9a6a14]">
+                <div className="mx-auto grid size-14 place-items-center rounded-2xl bg-amber-100 text-[#805d19]">
                   <CreditCard />
                 </div>
                 <h2 className="mt-5 text-2xl font-bold">
@@ -712,7 +712,7 @@ export default function Home() {
                 </p>
                 <Button
                   onClick={() => setActive("Configurações")}
-                  className="mt-6 h-11 bg-[#17191d]"
+                  className="mt-6 h-11 bg-[#c99f3d] hover:bg-[#b88b2f]"
                 >
                   Ver meu plano
                 </Button>
@@ -778,7 +778,7 @@ export default function Home() {
                 className="mt-1.5"
               />
             </label>
-            <Button className="h-11 w-full bg-[#d6a53a] font-bold text-[#17191d] hover:bg-[#c99a32]">
+            <Button className="h-11 w-full bg-[#c99f3d] font-bold text-[#151515] hover:bg-[#b88b2f]">
               Criar minha barbearia
             </Button>
           </form>
@@ -806,7 +806,7 @@ function Cards({
         <section key={label} className="rounded-2xl border bg-white p-5">
           <div className="flex items-center justify-between">
             <p className="text-sm font-medium text-zinc-500">{label}</p>
-            <div className="grid size-9 place-items-center rounded-xl bg-amber-50 text-[#b57c13]">
+            <div className="grid size-9 place-items-center rounded-xl bg-amber-50 text-[#805d19]">
               <Icon className="size-[18px]" />
             </div>
           </div>
@@ -874,7 +874,7 @@ function Dashboard({
           <div className="divide-y">
             {appointments.slice(0, 5).map((a) => (
               <div key={a.id} className="flex items-center gap-4 p-4">
-                <div className="grid size-11 place-items-center rounded-xl bg-zinc-100 font-bold">
+                <div className="grid size-11 place-items-center rounded-xl bg-secondary font-bold">
                   {a.time}
                 </div>
                 <div className="min-w-0 flex-1">
@@ -892,14 +892,14 @@ function Dashboard({
             ))}
           </div>
         </section>
-        <section className="rounded-2xl bg-[#17191d] p-6 text-white">
+        <section className="rounded-2xl bg-[#151515] p-6 text-white">
           <p className="text-sm text-zinc-400">Ocupação diária</p>
-          <p className="mt-2 text-4xl font-bold text-[#d6a53a]">
+          <p className="mt-2 text-4xl font-bold text-[#c99f3d]">
             {Math.round((appointments.length / 12) * 100)}%
           </p>
           <div className="mt-5 h-2 overflow-hidden rounded-full bg-white/10">
             <div
-              className="h-full rounded-full bg-[#d6a53a]"
+              className="h-full rounded-full bg-[#c99f3d]"
               style={{
                 width: `${Math.min((appointments.length / 12) * 100, 100)}%`,
               }}
@@ -974,7 +974,7 @@ function Agenda({
               <button
                 key={b}
                 onClick={() => setFilter(b)}
-                className={`rounded-lg px-3 py-2 text-xs font-semibold ${filter === b ? "bg-[#17191d] text-white" : "bg-zinc-100"}`}
+                className={`rounded-lg px-3 py-2 text-xs font-semibold ${filter === b ? "bg-[#151515] text-white" : "bg-secondary"}`}
               >
                 {b}
               </button>
@@ -1003,7 +1003,7 @@ function Agenda({
               <p className="font-semibold">{a.client}</p>
               <p className="text-xs text-zinc-500">{a.phone}</p>
               {a.planName && (
-                <p className="mt-1 text-xs font-semibold text-[#997015]">
+                <p className="mt-1 text-xs font-semibold text-[#805d19]">
                   Plano: {a.planName}
                 </p>
               )}
@@ -1055,7 +1055,7 @@ function Clients({
 }) {
   return (
     <section className="overflow-hidden rounded-2xl border bg-white">
-      <div className="grid grid-cols-[1.5fr_1fr_100px_120px_90px] gap-4 border-b bg-zinc-50 px-5 py-3 text-xs font-semibold uppercase text-zinc-500 max-sm:hidden">
+      <div className="grid grid-cols-[1.5fr_1fr_100px_120px_90px] gap-4 border-b bg-secondary px-5 py-3 text-xs font-semibold uppercase text-zinc-500 max-sm:hidden">
         <span>Cliente</span>
         <span>Última visita</span>
         <span>Visitas</span>
@@ -1082,7 +1082,7 @@ function Clients({
           <div className="ml-auto flex">
             <button
               onClick={() => onSchedule(c)}
-              className="rounded-lg p-2 text-[#9a6a14] hover:bg-amber-50"
+              className="rounded-lg p-2 text-[#805d19] hover:bg-amber-50"
               title="Agendar"
             >
               <CalendarDays className="size-4" />
@@ -1117,7 +1117,7 @@ function Services({
           className={`rounded-2xl border bg-white p-5 ${!s.active ? "opacity-55" : ""}`}
         >
           <div className="flex items-start justify-between">
-            <div className="grid size-10 place-items-center rounded-xl bg-amber-50 text-[#b57c13]">
+            <div className="grid size-10 place-items-center rounded-xl bg-amber-50 text-[#805d19]">
               <Scissors className="size-5" />
             </div>
             <button
@@ -1191,7 +1191,7 @@ function BookingSettings({
           onClick={() =>
             window.open(`/agendar?barbearia=${store.shopSlug}`, "_blank")
           }
-          className="bg-[#17191d]"
+          className="bg-[#c99f3d] hover:bg-[#b88b2f]"
         >
           Visualizar agendamento
         </Button>
@@ -1271,7 +1271,7 @@ function BookingSettings({
               <button
                 key={service.id}
                 onClick={() => toggle(service.id)}
-                className={`flex w-full items-center justify-between rounded-xl border p-4 text-left ${!service.active ? "cursor-not-allowed bg-zinc-50 opacity-45" : selected.includes(service.id) ? "border-emerald-200 bg-emerald-50" : "bg-zinc-50 opacity-65"}`}
+                className={`flex w-full items-center justify-between rounded-xl border p-4 text-left ${!service.active ? "cursor-not-allowed bg-secondary opacity-45" : selected.includes(service.id) ? "border-emerald-200 bg-emerald-50" : "bg-secondary opacity-65"}`}
               >
                 <div>
                   <p className="font-semibold">{service.name}</p>
@@ -1321,7 +1321,7 @@ function Team({
             className={`rounded-2xl border bg-white p-5 ${!b.active ? "opacity-55" : ""}`}
           >
             <div className="flex items-center gap-3">
-              <div className="grid size-12 place-items-center rounded-full bg-[#17191d] font-bold text-[#d6a53a]">
+              <div className="grid size-12 place-items-center rounded-full bg-[#151515] font-bold text-[#c99f3d]">
                 {initials(b.name)}
               </div>
               <div className="flex-1">
@@ -1336,15 +1336,15 @@ function Team({
               </button>
             </div>
             <div className="mt-5 grid grid-cols-3 gap-2 text-center">
-              <div className="rounded-lg bg-zinc-50 p-3">
+              <div className="rounded-lg bg-secondary p-3">
                 <p className="font-bold">{jobs.length}</p>
                 <p className="text-[11px] text-zinc-500">Hoje</p>
               </div>
-              <div className="rounded-lg bg-zinc-50 p-3">
+              <div className="rounded-lg bg-secondary p-3">
                 <p className="font-bold">{b.commission}%</p>
                 <p className="text-[11px] text-zinc-500">Comissão</p>
               </div>
-              <div className="rounded-lg bg-zinc-50 p-3">
+              <div className="rounded-lg bg-secondary p-3">
                 <p className="font-bold">
                   {money((total * b.commission) / 100)}
                 </p>
@@ -1488,9 +1488,9 @@ function Reports({
                   </span>
                   <strong>{money(value)}</strong>
                 </div>
-                <div className="h-2 rounded-full bg-zinc-100">
+                <div className="h-2 rounded-full bg-secondary">
                   <div
-                    className="h-full rounded-full bg-[#d6a53a]"
+                    className="h-full rounded-full bg-[#c99f3d]"
                     style={{ width: `${pct}%` }}
                   />
                 </div>
@@ -1559,11 +1559,11 @@ function SettingsPage({
   }
   return (
     <div className="grid gap-6 lg:grid-cols-2">
-      <section className="overflow-hidden rounded-2xl bg-[#17191d] p-6 text-white lg:col-span-2">
+      <section className="overflow-hidden rounded-2xl bg-[#151515] p-6 text-white lg:col-span-2">
         <div className="flex flex-col gap-6 md:flex-row md:items-center">
           <div className="flex-1">
             <div className="flex items-center gap-2">
-              <span className="rounded-full bg-[#d6a53a]/15 px-3 py-1 text-sm font-semibold text-[#e8bd5d]">
+              <span className="rounded-full bg-[#c99f3d]/15 px-3 py-1 text-sm font-semibold text-[#e4c16a]">
                 {subscription
                   ? statusLabel[subscription.status]
                   : "Carregando plano"}
@@ -1587,7 +1587,7 @@ function SettingsPage({
           </div>
           <div className="md:text-right">
             <p>
-              <span className="text-3xl font-bold text-[#d6a53a]">
+              <span className="text-3xl font-bold text-[#c99f3d]">
                 R$ 39,90
               </span>
               <span className="text-zinc-400">/mês</span>
@@ -1596,7 +1596,7 @@ function SettingsPage({
               <Button
                 onClick={startCheckout}
                 disabled={checkoutLoading || !subscription}
-                className="mt-4 h-11 bg-[#d6a53a] font-bold text-[#17191d] hover:bg-[#c99a32]"
+                className="mt-4 h-11 bg-[#c99f3d] font-bold text-[#151515] hover:bg-[#b88b2f]"
               >
                 <CreditCard className="size-4" />
                 {checkoutLoading
@@ -1627,7 +1627,7 @@ function SettingsPage({
               );
               flash("Link de agendamento copiado");
             }}
-            className="h-11 shrink-0 bg-[#17191d]"
+            className="h-11 shrink-0 bg-[#c99f3d] hover:bg-[#b88b2f]"
           >
             <Copy className="size-4" /> Copiar link
           </Button>
@@ -1676,7 +1676,7 @@ function SettingsPage({
             }));
             flash("Configurações salvas");
           }}
-          className="mt-5 bg-[#17191d]"
+          className="mt-5 bg-[#c99f3d] hover:bg-[#b88b2f]"
         >
           Salvar alterações
         </Button>
@@ -1734,7 +1734,7 @@ function SettingsPage({
             }
             window.location.replace("/login");
           }}
-          className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#17191d] py-3 text-sm font-semibold text-white hover:bg-black"
+          className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#151515] py-3 text-sm font-semibold text-white hover:bg-black"
         >
           <LogOut className="size-4" />
           Sair da conta
@@ -1928,7 +1928,7 @@ function EntryDialog({
             <Button type="button" variant="outline" onClick={close}>
               Cancelar
             </Button>
-            <Button type="submit" className="bg-[#17191d]">
+            <Button type="submit" className="bg-[#c99f3d] hover:bg-[#b88b2f]">
               Salvar
             </Button>
           </DialogFooter>

@@ -271,10 +271,10 @@ export default function Agendar() {
 
   if (done)
     return (
-      <main className="grid min-h-screen place-items-center bg-[#f3f2ee] p-5">
+      <main className="grid min-h-screen place-items-center bg-[#f7f4ec] p-5">
         <section className="w-full max-w-md overflow-hidden rounded-[2rem] bg-white text-center shadow-[0_24px_80px_-40px_rgba(22,24,27,.35)]">
-          <div className="bg-[#1a1c1e] px-7 pb-9 pt-10 text-white">
-            <div className="mx-auto grid size-16 place-items-center rounded-full bg-[#d6a53a] text-[#1a1c1e]">
+          <div className="bg-[#151515] px-7 pb-9 pt-10 text-white">
+            <div className="mx-auto grid size-16 place-items-center rounded-full bg-[#c99f3d] text-[#151515]">
               <Check className="size-8" />
             </div>
             <h1 className="mt-5 text-2xl font-bold">Pedido enviado!</h1>
@@ -287,7 +287,7 @@ export default function Agendar() {
               <p className="text-sm font-semibold text-zinc-500">
                 Sua solicitação
               </p>
-              <p className="mt-2 text-lg font-bold text-[#1a1c1e]">
+              <p className="mt-2 text-lg font-bold text-[#151515]">
                 {service?.name}
               </p>
               <p className="mt-1 text-sm text-zinc-600">
@@ -325,8 +325,8 @@ export default function Agendar() {
     );
 
   return (
-    <main className="min-h-screen bg-[#f3f2ee] text-[#202124]">
-      <header className="bg-[#1a1c1e] text-white">
+    <main className="min-h-screen bg-[#f7f4ec] text-[#24211b]">
+      <header className="bg-[#151515] text-white">
         <div className="mx-auto max-w-5xl px-5 pb-9 pt-6 sm:px-8 sm:pb-12 sm:pt-9">
           <div className="flex items-center gap-3 border-b border-white/10 pb-6">
             <BrandLogo className="h-12 w-[72px] shrink-0" priority />
@@ -337,7 +337,7 @@ export default function Agendar() {
               Agendamento online
             </span>
           </div>
-          <p className="mt-8 text-sm font-semibold uppercase tracking-[.18em] text-[#e0b857]">
+          <p className="mt-8 text-sm font-semibold uppercase tracking-[.18em] text-[#e4c16a]">
             Reserve seu horário
           </p>
           <h1 className="mt-2 max-w-xl text-3xl font-bold tracking-tight sm:text-4xl">
@@ -351,7 +351,7 @@ export default function Agendar() {
             <div className="mt-6 flex flex-wrap gap-x-6 gap-y-2 text-sm text-zinc-300">
               {data.shopAddress && (
                 <span className="flex items-center gap-2">
-                  <MapPin className="size-4 text-[#e0b857]" />
+                  <MapPin className="size-4 text-[#e4c16a]" />
                   {data.shopAddress}
                 </span>
               )}
@@ -378,7 +378,7 @@ export default function Agendar() {
             className="grid items-start gap-7 lg:grid-cols-[minmax(0,1fr)_290px]"
           >
             <div className="space-y-5">
-              <section className="rounded-[1.75rem] border border-[#e9e7e1] bg-white p-5 sm:p-7">
+              <section className="rounded-[1.75rem] border border-[#e8dfcb] bg-white p-5 sm:p-7">
                 <h2 className="text-lg font-bold">
                   Já tem um plano nesta barbearia?
                 </h2>
@@ -426,7 +426,7 @@ export default function Agendar() {
                   </p>
                 )}
                 {plan && (
-                  <div className="mt-4 rounded-2xl bg-[#fff9e9] p-4">
+                  <div className="mt-4 rounded-2xl bg-[#fff8e5] p-4">
                     <h3 className="font-bold">{plan.planName}</h3>
                     <p className="mt-1 text-xs text-zinc-600">
                       Válido de {plan.startsOn.split("-").reverse().join("/")}{" "}
@@ -476,12 +476,12 @@ export default function Agendar() {
                         setTime("");
                       }}
                       aria-pressed={service?.id === s.id}
-                      className={`group min-h-24 rounded-2xl border-2 p-4 text-left transition-colors ${service?.id === s.id ? "border-[#c99730] bg-[#fff9e9]" : "border-[#eeece6] bg-white hover:border-[#d6a53a]"}`}
+                      className={`group min-h-24 rounded-2xl border-2 p-4 text-left transition-colors ${service?.id === s.id ? "border-[#c99f3d] bg-[#fff8e5]" : "border-[#e8dfcb] bg-white hover:border-[#c99f3d]"}`}
                     >
                       <span className="flex items-start justify-between gap-3">
                         <b className="text-base">{s.name}</b>
                         {service?.id === s.id && (
-                          <Check className="size-5 shrink-0 text-[#ad7818]" />
+                          <Check className="size-5 shrink-0 text-[#805d19]" />
                         )}
                       </span>
                       <span className="mt-3 flex flex-wrap items-center justify-between gap-2 text-sm text-zinc-600">
@@ -489,14 +489,14 @@ export default function Agendar() {
                           <Clock3 className="size-4" />
                           {s.duration} min
                         </span>
-                        <strong className="text-[#202124]">
+                        <strong className="text-[#24211b]">
                           {money(s.price)}
                         </strong>
                       </span>
                     </button>
                   ))}
                   {data && !services.length && (
-                    <p className="col-span-full rounded-xl bg-[#f7f6f2] p-5 text-sm text-zinc-600">
+                    <p className="col-span-full rounded-xl bg-[#f7f4ec] p-5 text-sm text-zinc-600">
                       Nenhum serviço disponível nesta data.
                     </p>
                   )}
@@ -563,13 +563,13 @@ export default function Agendar() {
                       key={t}
                       onClick={() => setTime(t)}
                       aria-pressed={time === t}
-                      className={`min-h-12 rounded-xl border-2 px-2 py-3 text-base font-semibold transition-colors ${time === t ? "border-[#1a1c1e] bg-[#1a1c1e] text-white" : "border-[#eeece6] bg-white hover:border-[#d6a53a]"}`}
+                      className={`min-h-12 rounded-xl border-2 px-2 py-3 text-base font-semibold transition-colors ${time === t ? "border-[#151515] bg-[#151515] text-white" : "border-[#e8dfcb] bg-white hover:border-[#c99f3d]"}`}
                     >
                       {t}
                     </button>
                   ))}
                   {data && !available.length && (
-                    <p className="col-span-full rounded-xl bg-[#f7f6f2] p-5 text-sm text-zinc-600">
+                    <p className="col-span-full rounded-xl bg-[#f7f4ec] p-5 text-sm text-zinc-600">
                       Nenhum horário disponível nesta data.
                     </p>
                   )}
@@ -631,7 +631,7 @@ export default function Agendar() {
                 )}
                 <Button
                   disabled={!service || !barber || !time || saving}
-                  className="mt-5 h-14 w-full bg-[#d6a53a] text-base font-bold text-[#17191d] hover:bg-[#c99a32]"
+                  className="mt-5 h-14 w-full bg-[#c99f3d] text-base font-bold text-[#151515] hover:bg-[#b88b2f]"
                 >
                   {saving ? "Enviando pedido..." : "Solicitar agendamento"}
                 </Button>
@@ -641,10 +641,10 @@ export default function Agendar() {
               </Box>
             </div>
             <aside
-              className="rounded-[1.75rem] bg-[#1a1c1e] p-6 text-white shadow-lg lg:sticky lg:top-6"
+              className="rounded-[1.75rem] bg-[#151515] p-6 text-white shadow-lg lg:sticky lg:top-6"
               aria-label="Resumo do agendamento"
             >
-              <p className="text-sm font-semibold uppercase tracking-[.14em] text-[#e0b857]">
+              <p className="text-sm font-semibold uppercase tracking-[.14em] text-[#e4c16a]">
                 Seu agendamento
               </p>
               <h2 className="mt-2 text-xl font-bold">Confira seu pedido</h2>
@@ -676,7 +676,7 @@ export default function Agendar() {
               )}
               <div className="mt-5 flex items-center justify-between gap-3">
                 <span className="text-sm text-zinc-300">Valor do serviço</span>
-                <strong className="text-xl text-[#e0b857]">
+                <strong className="text-xl text-[#e4c16a]">
                   {covered
                     ? "Incluído no plano"
                     : service
@@ -708,9 +708,9 @@ function Box({
   children: React.ReactNode;
 }) {
   return (
-    <section className="rounded-[1.75rem] border border-[#e9e7e1] bg-white p-5 shadow-[0_12px_32px_-25px_rgba(22,24,27,.2)] sm:p-7">
+    <section className="rounded-[1.75rem] border border-[#e8dfcb] bg-white p-5 shadow-[0_12px_32px_-25px_rgba(22,24,27,.2)] sm:p-7">
       <div className="mb-5 flex items-start gap-3">
-        <span className="grid size-9 shrink-0 place-items-center rounded-xl bg-[#f6e9c9] text-sm font-bold text-[#76500c]">
+        <span className="grid size-9 shrink-0 place-items-center rounded-xl bg-[#f2e4bf] text-sm font-bold text-[#805d19]">
           {number}
         </span>
         <div>
