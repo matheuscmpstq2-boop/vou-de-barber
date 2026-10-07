@@ -1,6 +1,7 @@
 "use client";
 
-import { FormEvent, useEffect, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
+import { FormEvent, useEffect, useRef, useState } from "react";
 import {
   BarChart3,
   CalendarDays,
@@ -34,10 +35,15 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { CustomerPlans } from "@/components/customer-plans";
 import { supabase } from "@/lib/supabase";
 
 type Status =
-  "Confirmado" | "Aguardando" | "Em atendimento" | "Finalizado" | "Cancelado";
+  | "Confirmado"
+  | "Aguardando"
+  | "Em atendimento"
+  | "Finalizado"
+  | "Cancelado";
 type Appointment = {
   id: number;
   date: string;
@@ -49,6 +55,9 @@ type Appointment = {
   barber: string;
   price: number;
   status: Status;
+  membershipId?: string;
+  planName?: string;
+  serviceId?: number;
 };
 type Client = {
   id: number;
@@ -75,7 +84,13 @@ type Barber = {
 type Expense = { id: number; description: string; value: number; date: string };
 type Subscription = {
   id: string;
-  status: "trialing" | "pending" | "active" | "past_due" | "canceled" | "expired";
+  status:
+    | "trialing"
+    | "pending"
+    | "active"
+    | "past_due"
+    | "canceled"
+    | "expired";
   trial_ends_at: string | null;
   current_period_ends_at: string | null;
 };
@@ -118,6 +133,7 @@ const nav = [
   [CalendarDays, "Agenda"],
   [Clock3, "Agendamento online"],
   [Users, "Clientes"],
+  [CreditCard, "Planos de clientes"],
   [Scissors, "Serviços"],
   [UserRound, "Equipe"],
   [CircleDollarSign, "Financeiro"],
@@ -145,7 +161,15 @@ function initials(name: string) {
 }
 
 export default function Home() {
+  const router = useRouter();
   const [store, setStore] = useState<Store>(seed);
+  const sync = useRef<{
+    version: string;
+    saved: Store;
+    latest: Store;
+    running: boolean;
+  }>({ version: "", saved: seed, latest: seed, running: false });
+  sync.current.latest = store;
   const [ready, setReady] = useState(false);
   const [shopId, setShopId] = useState("");
   const [subscription, setSubscription] = useState<Subscription | null>(null);
@@ -156,6 +180,7 @@ export default function Home() {
   >(null);
   const [search, setSearch] = useState("");
   const [barberFilter, setBarberFilter] = useState("Todos");
+  const [agendaDate, setAgendaDate] = useState(today);
   const [notice, setNotice] = useState("");
   useEffect(() => {
     (async () => {
@@ -163,12 +188,12 @@ export default function Home() {
         data: { user },
       } = await supabase.auth.getUser();
       if (!user) {
-        location.href = "/login";
+        router.replace("/login");
         return;
       }
       const { data, error } = await supabase
         .from("barbershops")
-        .select("id,name,phone,address,slug,payload")
+        .select("id,name,phone,address,slug,payload,updated_at")
         .eq("owner_id", user.id)
         .maybeSingle();
       if (error) {
@@ -176,7 +201,7 @@ export default function Home() {
         return;
       }
       if (!data) {
-        location.href = "/configurar";
+        router.replace("/configurar");
         return;
       }
       setShopId(data.id);
@@ -186,7 +211,7 @@ export default function Home() {
         .eq("barbershop_id", data.id)
         .maybeSingle();
       setSubscription(plan as Subscription | null);
-      setStore({
+      const loaded: Store = {
         ...seed,
         ...(data.payload || {}),
         shopName: data.name,
@@ -194,48 +219,118 @@ export default function Home() {
         shopAddress: data.address,
         shopSlug: data.slug,
         onboarded: true,
-      });
+      };
+      sync.current.version = data.updated_at;
+      sync.current.saved = loaded;
+      sync.current.latest = loaded;
+      setStore(loaded);
       setReady(true);
+      const result = new URLSearchParams(window.location.search).get("plano");
+      if (result) {
+        setActive("Configurações");
+        flash(
+          result === "sucesso"
+            ? "Pagamento enviado. A confirmação será atualizada automaticamente"
+            : result === "cancelado"
+              ? "Pagamento cancelado"
+              : "O link de pagamento expirou",
+        );
+        window.history.replaceState({}, "", window.location.pathname);
+      }
     })();
-  }, []);
+  }, [router]);
   useEffect(() => {
     if (!ready || !shopId) return;
+    async function flush() {
+      const state = sync.current;
+      if (state.running || state.latest === state.saved) return;
+      state.running = true;
+      try {
+        while (state.latest !== state.saved) {
+          const snapshot = state.latest;
+          const { data, error } = await supabase.rpc("save_barbershop_state", {
+            p_shop: shopId,
+            p_payload: snapshot,
+            p_version: state.version,
+          });
+          if (error || data?.conflict) {
+            const { data: fresh } = await supabase
+              .from("barbershops")
+              .select("payload,updated_at,name,phone,address,slug")
+              .eq("id", shopId)
+              .single();
+            if (fresh) {
+              const loaded = {
+                ...seed,
+                ...fresh.payload,
+                shopName: fresh.name,
+                shopPhone: fresh.phone,
+                shopAddress: fresh.address,
+                shopSlug: fresh.slug,
+              } as Store;
+              state.version = fresh.updated_at;
+              state.saved = loaded;
+              state.latest = loaded;
+              setStore(loaded);
+            } else {
+              state.saved = snapshot;
+            }
+            flash(
+              error
+                ? `Não foi possível salvar: ${error.message}`
+                : "A agenda recebeu alterações. Confira os dados atualizados e repita sua alteração.",
+            );
+            break;
+          }
+          state.version = data.version;
+          state.saved = snapshot;
+        }
+      } finally {
+        state.running = false;
+      }
+    }
     const timer = setTimeout(() => {
-      supabase
-        .from("barbershops")
-        .update({
-          name: store.shopName,
-          phone: store.shopPhone,
-          address: store.shopAddress,
-          payload: store,
-          updated_at: new Date().toISOString(),
-        })
-        .eq("id", shopId)
-        .then(({ error }) => {
-          if (error) flash("Alterações não sincronizadas");
-        });
+      void flush();
     }, 450);
     return () => clearTimeout(timer);
   }, [store, ready, shopId]);
+  useEffect(() => {
+    if (!ready || !shopId) return;
+    const timer = setInterval(async () => {
+      const state = sync.current;
+      if (state.running || state.latest !== state.saved) return;
+      const { data } = await supabase
+        .from("barbershops")
+        .select("payload,updated_at,name,phone,address,slug")
+        .eq("id", shopId)
+        .single();
+      if (
+        !data ||
+        data.updated_at === state.version ||
+        state.running ||
+        state.latest !== state.saved
+      )
+        return;
+      const loaded = {
+        ...seed,
+        ...data.payload,
+        shopName: data.name,
+        shopPhone: data.phone,
+        shopAddress: data.address,
+        shopSlug: data.slug,
+      } as Store;
+      state.version = data.updated_at;
+      state.saved = loaded;
+      state.latest = loaded;
+      setStore(loaded);
+    }, 15000);
+    return () => clearInterval(timer);
+  }, [ready, shopId]);
   useEffect(() => {
     if (!notice) return;
     const t = setTimeout(() => setNotice(""), 2500);
     return () => clearTimeout(t);
   }, [notice]);
-  useEffect(() => {
-    if (!ready) return;
-    const result = new URLSearchParams(window.location.search).get("plano");
-    if (!result) return;
-    setActive("Configurações");
-    flash(
-      result === "sucesso"
-        ? "Pagamento enviado. A confirmação será atualizada automaticamente"
-        : result === "cancelado"
-          ? "Pagamento cancelado"
-          : "O link de pagamento expirou",
-    );
-    window.history.replaceState({}, "", window.location.pathname);
-  }, [ready]);
   useEffect(() => {
     const ctx = (
       document as Document & {
@@ -281,7 +376,8 @@ export default function Home() {
     .reduce((s, a) => s + a.price, 0);
   const expenses = store.expenses.reduce((s, e) => s + e.value, 0);
   const finished = appts.filter((a) => a.status === "Finalizado").length;
-  const filtered = appts
+  const filtered = store.appointments
+    .filter((a) => a.date === agendaDate)
     .filter(
       (a) =>
         (barberFilter === "Todos" || a.barber === barberFilter) &&
@@ -289,7 +385,9 @@ export default function Home() {
     )
     .sort((a, b) => a.time.localeCompare(b.time));
   const title = active;
-  const isLocked = !!subscription && ["past_due", "expired", "canceled"].includes(subscription.status);
+  const isLocked =
+    !!subscription &&
+    ["past_due", "expired", "canceled"].includes(subscription.status);
   function flash(message: string) {
     setNotice(message);
   }
@@ -533,6 +631,8 @@ export default function Home() {
           {active === "Agenda" && (
             <Agenda
               items={filtered}
+              date={agendaDate}
+              setDate={setAgendaDate}
               search={search}
               setSearch={setSearch}
               filter={barberFilter}
@@ -556,6 +656,9 @@ export default function Home() {
                 setSearch(c.name);
               }}
             />
+          )}
+          {active === "Planos de clientes" && (
+            <CustomerPlans shopId={shopId} services={store.services} />
           )}
           {active === "Serviços" && (
             <Services
@@ -601,9 +704,19 @@ export default function Home() {
                 <div className="mx-auto grid size-14 place-items-center rounded-2xl bg-amber-100 text-[#9a6a14]">
                   <CreditCard />
                 </div>
-                <h2 className="mt-5 text-2xl font-bold">Regularize seu plano</h2>
-                <p className="mt-2 text-zinc-500">Seu acesso está temporariamente limitado. Atualize a assinatura para voltar a usar todas as funções.</p>
-                <Button onClick={() => setActive("Configurações")} className="mt-6 h-11 bg-[#17191d]">Ver meu plano</Button>
+                <h2 className="mt-5 text-2xl font-bold">
+                  Regularize seu plano
+                </h2>
+                <p className="mt-2 text-zinc-500">
+                  Seu acesso está temporariamente limitado. Atualize a
+                  assinatura para voltar a usar todas as funções.
+                </p>
+                <Button
+                  onClick={() => setActive("Configurações")}
+                  className="mt-6 h-11 bg-[#17191d]"
+                >
+                  Ver meu plano
+                </Button>
               </section>
             </div>
           )}
@@ -805,6 +918,8 @@ function Dashboard({
   );
 }
 function Agenda({
+  date,
+  setDate,
   items,
   search,
   setSearch,
@@ -814,6 +929,8 @@ function Agenda({
   changeStatus,
   remove,
 }: {
+  date: string;
+  setDate: (x: string) => void;
   items: Appointment[];
   search: string;
   setSearch: (x: string) => void;
@@ -823,18 +940,32 @@ function Agenda({
   changeStatus: (id: number, s: Status) => void;
   remove: (id: number) => void;
 }) {
+  function shiftDate(offset: number) {
+    const next = new Date(`${date || today}T12:00:00Z`);
+    next.setUTCDate(next.getUTCDate() + offset);
+    setDate(next.toISOString().slice(0, 10));
+  }
   return (
     <section className="overflow-hidden rounded-2xl border bg-white">
       <div className="flex flex-wrap items-center gap-3 border-b p-5">
         <div className="mr-auto flex items-center gap-2">
-          <button className="rounded-lg border p-2">
+          <button aria-label="Dia anterior" onClick={() => shiftDate(-1)} className="rounded-lg border p-2">
             <ChevronLeft className="size-4" />
           </button>
-          <button className="rounded-lg border p-2">
+          <button aria-label="Próximo dia" onClick={() => shiftDate(1)} className="rounded-lg border p-2">
             <ChevronRight className="size-4" />
           </button>
           <div className="ml-2">
-            <h2 className="font-bold">Agenda de hoje</h2>
+            <h2 className="font-bold">Agenda</h2>
+            <label className="mt-2 block text-xs text-zinc-500">
+              Data dos atendimentos
+              <Input
+                type="date"
+                value={date}
+                onChange={(e) => setDate(e.target.value)}
+                className="mt-1 w-40"
+              />
+            </label>
             <p className="text-xs text-zinc-500">
               {items.length} atendimentos encontrados
             </p>
@@ -874,16 +1005,24 @@ function Agenda({
             <div>
               <p className="font-semibold">{a.client}</p>
               <p className="text-xs text-zinc-500">{a.phone}</p>
+              {a.planName && (
+                <p className="mt-1 text-xs font-semibold text-[#997015]">
+                  Plano: {a.planName}
+                </p>
+              )}
             </div>
             <div className="hidden sm:block">
               <p className="text-sm font-medium">{a.service}</p>
-              <p className="text-xs text-zinc-400">{money(a.price)}</p>
+              <p className="text-xs text-zinc-400">
+                {a.planName ? `Incluído · ${a.planName}` : money(a.price)}
+              </p>
             </div>
             <p className="hidden text-sm sm:block">{a.barber}</p>
             <select
               value={a.status}
               onChange={(e) => changeStatus(a.id, e.target.value as Status)}
-              className={`hidden rounded-lg border-0 px-2 py-2 text-xs font-semibold sm:block ${statusColors[a.status]}`}
+              aria-label={`Status de ${a.client}`}
+              className={`col-start-2 rounded-lg border-0 px-2 py-2 text-xs font-semibold sm:col-start-auto ${statusColors[a.status]}`}
             >
               {[
                 "Aguardando",
@@ -1051,10 +1190,10 @@ function BookingSettings({
             Confira como serviços e horários aparecem para o cliente.
           </p>
         </div>
-          <Button
-            onClick={() =>
-              window.open(`/agendar?barbearia=${store.shopSlug}`, "_blank")
-            }
+        <Button
+          onClick={() =>
+            window.open(`/agendar?barbearia=${store.shopSlug}`, "_blank")
+          }
           className="bg-[#17191d]"
         >
           Visualizar agendamento
@@ -1392,25 +1531,33 @@ function SettingsPage({
     canceled: "Cancelado",
     expired: "Expirado",
   };
-  const planDate = subscription?.status === "trialing"
-    ? subscription.trial_ends_at
-    : subscription?.current_period_ends_at;
+  const planDate =
+    subscription?.status === "trialing"
+      ? subscription.trial_ends_at
+      : subscription?.current_period_ends_at;
 
   async function startCheckout() {
     setCheckoutLoading(true);
-    const { data, error } = await supabase.functions.invoke("asaas-checkout", { body: {} });
+    const { data, error } = await supabase.functions.invoke("asaas-checkout", {
+      body: {},
+    });
     setCheckoutLoading(false);
     if (error || !data?.checkoutUrl) {
       let message = data?.error || "Pagamento ainda não está disponível";
       const context = (error as { context?: Response } | null)?.context;
       if (context) {
-        const body = await context.clone().json().catch(() => null);
+        const body = await context
+          .clone()
+          .json()
+          .catch(() => null);
         if (body?.error) message = body.error;
       }
       flash(message);
       return;
     }
-    setSubscription((current) => current ? { ...current, status: "pending" } : current);
+    setSubscription((current) =>
+      current ? { ...current, status: "pending" } : current,
+    );
     window.location.href = data.checkoutUrl;
   }
   return (
@@ -1420,27 +1567,51 @@ function SettingsPage({
           <div className="flex-1">
             <div className="flex items-center gap-2">
               <span className="rounded-full bg-[#d6a53a]/15 px-3 py-1 text-sm font-semibold text-[#e8bd5d]">
-                {subscription ? statusLabel[subscription.status] : "Carregando plano"}
+                {subscription
+                  ? statusLabel[subscription.status]
+                  : "Carregando plano"}
               </span>
             </div>
             <h2 className="mt-4 text-2xl font-bold">Plano Profissional</h2>
-            <p className="mt-1 text-zinc-400">Agenda online, clientes, serviços, equipe, financeiro e relatórios.</p>
+            <p className="mt-1 text-zinc-400">
+              Agenda online, clientes, serviços, equipe, financeiro e
+              relatórios.
+            </p>
             {planDate && (
               <p className="mt-4 text-sm text-zinc-300">
-                {subscription?.status === "trialing" ? "Teste grátis até " : "Próxima renovação em "}
-                <strong>{new Date(planDate).toLocaleDateString("pt-BR")}</strong>
+                {subscription?.status === "trialing"
+                  ? "Teste grátis até "
+                  : "Próxima renovação em "}
+                <strong>
+                  {new Date(planDate).toLocaleDateString("pt-BR")}
+                </strong>
               </p>
             )}
           </div>
           <div className="md:text-right">
-            <p><span className="text-3xl font-bold text-[#d6a53a]">R$ 39,90</span><span className="text-zinc-400">/mês</span></p>
+            <p>
+              <span className="text-3xl font-bold text-[#d6a53a]">
+                R$ 39,90
+              </span>
+              <span className="text-zinc-400">/mês</span>
+            </p>
             {subscription?.status !== "active" && (
-              <Button onClick={startCheckout} disabled={checkoutLoading || !subscription} className="mt-4 h-11 bg-[#d6a53a] font-bold text-[#17191d] hover:bg-[#c99a32]">
+              <Button
+                onClick={startCheckout}
+                disabled={checkoutLoading || !subscription}
+                className="mt-4 h-11 bg-[#d6a53a] font-bold text-[#17191d] hover:bg-[#c99a32]"
+              >
                 <CreditCard className="size-4" />
-                {checkoutLoading ? "Abrindo pagamento..." : subscription?.status === "pending" ? "Continuar pagamento" : "Assinar agora"}
+                {checkoutLoading
+                  ? "Abrindo pagamento..."
+                  : subscription?.status === "pending"
+                    ? "Continuar pagamento"
+                    : "Assinar agora"}
               </Button>
             )}
-            <p className="mt-2 text-xs text-zinc-500">Pagamento seguro processado pelo Asaas</p>
+            <p className="mt-2 text-xs text-zinc-500">
+              Pagamento seguro processado pelo Asaas
+            </p>
           </div>
         </div>
       </section>
