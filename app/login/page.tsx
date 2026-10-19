@@ -23,7 +23,8 @@ export default function Login() {
       setError("E-mail ou senha inválidos.");
       return;
     }
-    location.href = "/";
+    const next = new URLSearchParams(window.location.search).get("next");
+    location.href = next === "/admin" ? "/admin" : "/";
   }
   return (
     <main className="grid min-h-screen place-items-center bg-[#151515] p-5">

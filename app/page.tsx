@@ -19,6 +19,7 @@ import {
   Scissors,
   Search,
   Settings,
+  ShieldCheck,
   Sparkles,
   Trash2,
   UserRound,
@@ -172,6 +173,7 @@ export default function Home() {
   }>({ version: "", saved: seed, latest: seed, running: false });
   sync.current.latest = store;
   const [ready, setReady] = useState(false);
+  const [isPlatformAdmin, setIsPlatformAdmin] = useState(false);
   const [shopId, setShopId] = useState("");
   const [subscription, setSubscription] = useState<Subscription | null>(null);
   const [active, setActive] = useState("Visão geral");
@@ -192,6 +194,8 @@ export default function Home() {
         router.replace("/login");
         return;
       }
+      const { data: platformAdmin } = await supabase.rpc("platform_admin_access");
+      setIsPlatformAdmin(platformAdmin === true);
       const { data, error } = await supabase
         .from("barbershops")
         .select("id,name,phone,address,slug,payload,updated_at")
@@ -565,6 +569,7 @@ export default function Home() {
               )}
             </button>
           ))}
+          {isPlatformAdmin && <a href="/admin" className="mt-4 flex items-center gap-3 rounded-xl border border-[#c99f3d]/40 px-3 py-3 text-sm font-semibold text-[#e4c16a]"><ShieldCheck className="size-[18px]" />Administrar plataforma</a>}
         </nav>
         <div className="absolute bottom-5 left-4 right-4 rounded-2xl border border-white/10 bg-white/[.04] p-4">
           <div className="flex items-center gap-3">
