@@ -57,9 +57,9 @@ create or replace view barber_private.platform_payments as
  with latest as (
   select distinct on (w.payload->'payment'->>'id')
    w.payload->'payment' as payment,w.event_id,w.event_type,w.processed_at,w.processing_error,
-   coalesce(w.payload->>'dateCreated',to_jsonb(w)->>'created_at','') as event_at
+   coalesce(w.payload->>'dateCreated',w.received_at::text,'') as event_at
   from public.asaas_webhook_events w where nullif(w.payload->'payment'->>'id','') is not null
-  order by w.payload->'payment'->>'id',coalesce(w.payload->>'dateCreated',to_jsonb(w)->>'created_at','') desc,w.event_id desc
+  order by w.payload->'payment'->>'id',coalesce(w.payload->>'dateCreated',w.received_at::text,'') desc,w.event_id desc
  )
  select payment->>'id' as id,shop.id as shop_id,shop.name as shop_name,shop.email,
  case when event_type='PAYMENT_DELETED' then 'DELETED' when event_type='PAYMENT_REFUNDED' then 'REFUNDED' else upper(coalesce(nullif(payment->>'status',''),replace(event_type,'PAYMENT_',''))) end as status,
@@ -99,8 +99,8 @@ begin
   'estimated_mrr',(select count(*)*39.90 from barber_private.platform_shops where billing_state='active'),
   'billing_states',(select coalesce(jsonb_object_agg(billing_state,total),'{}') from (select billing_state,count(*) total from barber_private.platform_shops group by billing_state) c),
   'webhook_errors',(select count(*) from public.asaas_webhook_events where processing_error is not null),
-  'last_webhook_at',(select max(to_jsonb(w)->>'created_at') from public.asaas_webhook_events w),
-  'recent_webhook_errors',(select coalesce(jsonb_agg(e),'[]') from (select event_id,event_type,processing_error,to_jsonb(w)->>'created_at' as created_at from public.asaas_webhook_events w where processing_error is not null order by to_jsonb(w)->>'created_at' desc limit 10) e)
+  'last_webhook_at',(select max(w.received_at) from public.asaas_webhook_events w),
+  'recent_webhook_errors',(select coalesce(jsonb_agg(e),'[]') from (select event_id,event_type,processing_error,w.received_at as created_at from public.asaas_webhook_events w where processing_error is not null order by w.received_at::text desc limit 10) e)
  ) into result;
  return result;
 end $$;
